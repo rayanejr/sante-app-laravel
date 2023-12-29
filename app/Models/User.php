@@ -41,4 +41,14 @@ class User extends Authenticatable implements MustVerifyEmailContract
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+     /**
+     * Détermine si l'utilisateur est un administrateur.
+     *
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return $this->is_admin; // Assurez-vous que 'is_admin' est un attribut de votre modèle User
+    }
 }
