@@ -12,7 +12,8 @@ class AdminController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        return view('admin.index');
-    }
+{
+    return view('admin.index', ['header' => 'Votre titre de page ici']);
+}
+
 }

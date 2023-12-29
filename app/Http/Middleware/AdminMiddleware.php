@@ -17,12 +17,11 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        // Vérifie si l'utilisateur est connecté et est un administrateur
-        if (!Auth::check() || !Auth::user()->isAdmin) {
-            // Rediriger l'utilisateur s'il n'est pas administrateur
+        if (!Auth::check() || !Auth::user()->isAdmin()) {
             return redirect('/home');
         }
 
         return $next($request);
     }
+
 }
