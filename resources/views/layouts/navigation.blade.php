@@ -26,18 +26,10 @@
                         </li>
                     @endif
                 @else
-                    <!-- Liens pour les utilisateurs authentifiés -->
-                    @if (Auth::user()->isAdmin())
-                        <!-- Lien spécifique pour l'administrateur -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('admin.index') }}">{{ __('Admin Dashboard') }}</a>
-                        </li>
-                    @else
-                        <!-- Lien pour les utilisateurs normaux -->
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('dashboard') }}">{{ __('User Dashboard') }}</a>
-                        </li>
-                    @endif
+                    <!-- Lien pour les utilisateurs authentifiés -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ Auth::user()->isAdmin() ? route('admin.index') : route('dashboard') }}">{{ __('Accueil') }}</a>
+                    </li>
 
                     <li class="nav-item dropdown">
                         <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

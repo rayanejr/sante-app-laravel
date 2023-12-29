@@ -32,6 +32,12 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
+        // Vérifiez si l'utilisateur est un administrateur et redirigez-le vers le tableau de bord admin
+        if (Auth::user()->isAdmin()) {
+            return redirect()->route('admin.index');
+        }
+
+        // Pour les autres utilisateurs, redirigez vers la page par défaut
         return redirect()->intended(RouteServiceProvider::HOME);
     }
 
