@@ -13,7 +13,7 @@ class AdminController extends Controller
      */
     public function index()
 {
-    return view('admin.index', ['header' => 'Votre titre de page ici']);
+    return view('admin.index');
 }
 
 }
