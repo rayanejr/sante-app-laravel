@@ -1,4 +1,6 @@
 <x-guest-layout>
+    @include('layouts.navigation')
+
     <x-auth-card>
         <x-slot name="logo">
             <a href="/">
@@ -19,11 +21,9 @@
             <!-- Mot de passe -->
             <div class="form-group">
                 <x-label for="password" value="Mot de passe" />
-
                 <x-input id="password" class="form-control block mt-1 w-full"
-                                type="password"
-                                name="password"
-                                required autocomplete="current-password" />
+                         type="password" name="password" required 
+                         autocomplete="current-password" />
             </div>
 
             <div class="flex justify-end mt-4">

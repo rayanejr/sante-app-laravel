@@ -11,19 +11,14 @@
                             de réinitialisation de mot de passe qui vous permettra de choisir un nouveau.
                         </p>
 
-                        <!-- Statut de la Session -->
                         <x-auth-session-status class="mb-4" :status="session('status')" />
-
-                        <!-- Erreurs de Validation -->
                         <x-auth-validation-errors class="mb-4" :errors="$errors" />
 
                         <form method="POST" action="{{ route('password.email') }}">
                             @csrf
 
-                            <!-- Adresse E-mail -->
                             <div class="form-group">
                                 <x-label for="email" value="E-mail" />
-
                                 <x-input id="email" class="form-control" 
                                          type="email" name="email" 
                                          :value="old('email')" required autofocus />
