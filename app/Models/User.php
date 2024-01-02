@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use App\Models\Deplacement;
 
 class User extends Authenticatable implements MustVerifyEmailContract
 {
@@ -42,6 +43,16 @@ class User extends Authenticatable implements MustVerifyEmailContract
         'email_verified_at' => 'datetime',
     ];
 
+    // /**
+    //  * Les attributs qui doivent être ajoutés au modèle.
+    //  *
+    //  * @var array<string, mixed>
+    //  */
+    // protected $appends = [
+    //     'is_admin',
+    // ];
+
+
      /**
      * Détermine si l'utilisateur est un administrateur.
      *
@@ -50,5 +61,15 @@ class User extends Authenticatable implements MustVerifyEmailContract
     public function isAdmin()
     {
         return $this->is_admin; // Assurez-vous que 'is_admin' est un attribut de votre modèle User
+    }
+
+    /**
+     * Récupère les déplacements associés à l'utilisateur.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function deplacements()
+    {
+        return $this->hasMany(Deplacement::class);
     }
 }
