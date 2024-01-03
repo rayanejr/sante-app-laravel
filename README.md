@@ -1,3 +1,4 @@
+![Santé-App Interface](https://example.com/image.png)
 
 # À propos de Santé-App
 
@@ -61,3 +62,7 @@ Assurez-vous d'avoir Docker installé sur votre machine. Suivez ces étapes pour
 - Accueil : Accédez à la page d'accueil de l'application.
 - Admin : Interface d'administration pour gérer les actes de santé, les pays, les recommandations et les déplacements.
 - Login/Inscription : Authentifiez-vous ou inscrivez-vous pour accéder aux fonctionnalités de l'application.
+sudo apt update
+docker run --rm -v $(pwd):/app composer install
+sudo chmod -R 777 storage bootstrap/cache
+sudo chown -R www-data:www-data /var/www/html
