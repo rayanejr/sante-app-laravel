@@ -1,4 +1,4 @@
-![Santé-App Interface](https://example.com/image.png)
+![Santé-App Interface](https://github.com/rayanejr/sante-app/blob/main/logo.png)
 
 # À propos de Santé-App
 
@@ -25,6 +25,7 @@ Santé-App est une application web innovante développée avec le framework Lara
 - Laravel
 - MySQL
 - Docker
+
 ## Installation et Configuration
 
 Assurez-vous d'avoir Docker installé sur votre machine. Suivez ces étapes pour configurer l'application :
@@ -34,13 +35,19 @@ Assurez-vous d'avoir Docker installé sur votre machine. Suivez ces étapes pour
     git clone https://github.com/rayanejr/sante-app.git
     cd sante-app
 
-2. **Installation des dépendances**
+2. **Configuration de l'environnement**
     ```bash
-    composer install
+    Copiez et configurez .env.example en .env
 
-3. **Configuration de l'environnement**
+3. **Installation de composer et demarrage du conteneur**
     ```bash
-    Copiez et configurez .env.example en .env, puis ajustez vos paramètres de base de données et autres.
+    docker run --rm -v $(pwd):/app composer install
+
+4. **Ajout des permissions**
+    ```bash
+    sudo chmod -R 777 storage bootstrap/cache
+    sudo chown -R www-data:www-data /var/www/html
+
 4. **Démarrez les containers Docker**
     ```bash
     docker-compose up -d --build
@@ -62,7 +69,3 @@ Assurez-vous d'avoir Docker installé sur votre machine. Suivez ces étapes pour
 - Accueil : Accédez à la page d'accueil de l'application.
 - Admin : Interface d'administration pour gérer les actes de santé, les pays, les recommandations et les déplacements.
 - Login/Inscription : Authentifiez-vous ou inscrivez-vous pour accéder aux fonctionnalités de l'application.
-sudo apt update
-docker run --rm -v $(pwd):/app composer install
-sudo chmod -R 777 storage bootstrap/cache
-sudo chown -R www-data:www-data /var/www/html
