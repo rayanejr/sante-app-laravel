@@ -1,52 +1,45 @@
 <x-guest-layout>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card shadow-lg">
-                    <div class="card-header bg-primary text-white">Connexion</div>
-                    <div class="card-body bg-light">
-                        <!-- Statut de la Session -->
-                        <x-auth-session-status class="mb-4" :status="session('status')" />
-
-                        <!-- Erreurs de Validation -->
-                        <x-auth-validation-errors class="mb-4" :errors="$errors" />
-
+    <div class="container ">
+        <div class="login-container">
+          
+            <div class="login-info">
+                <h2>Bienvenue sur Santé-App</h2>
+                <p>Rejoignez-nous et découvrez le moyen premium de vérifier votre état de santé, de gérer vos rendez-vous et de rester au courant de vos besoins médicaux en toute simplicité.</p>
+                <p>Vous n'avez pas de compte ? <a href="{{ route('register') }}" style="color: #3490dc;">Inscrivez-vous maintenant</a></p>
+            </div>
+        
+            <div class="login-form">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h2 class="my-0">Connectez-vous à votre compte</h2>
+                    </div>
+                    <div class="card-body">
                         <form method="POST" action="{{ route('login') }}">
                             @csrf
-
-                            <!-- Adresse E-mail -->
                             <div class="form-group">
-                                <x-label for="email" value="E-mail" />
-
-                                <x-input id="email" class="form-control block mt-1 w-full"
-                                         type="email" name="email" :value="old('email')" required autofocus />
+                                <x-label for="email" :value="__('Email')" />
+                                <x-input id="email" class="form-control" type="email" name="email" :value="old('email')" required autofocus />
                             </div>
-
-                            <!-- Mot de passe -->
-                            <div class="form-group mt-4">
-                                <x-label for="password" value="Mot de passe" />
-
-                                <x-input id="password" class="form-control block mt-1 w-full"
-                                         type="password" name="password" required />
+                            <div class="form-group">
+                                <x-label for="password" :value="__('Mot de passe')" />
+                                <x-input id="password" class="form-control" type="password" name="password" required autocomplete="current-password" />
                             </div>
-
-                            <!-- Se souvenir de moi -->
-                            <div class="form-group block mt-4">
-                                <label for="remember_me" class="inline-flex items-center">
-                                    <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="remember">
-                                    <span class="ml-2 text-sm text-gray-600">Se souvenir de moi</span>
+                            <div class="form-group">
+                                <label for="remember_me" class="flex items-center">
+                                    <input id="remember_me" type="checkbox" class="form-checkbox" name="remember">
+                                    <span class="ml-2">{{ __('Se souvenir de moi') }}</span>
                                 </label>
                             </div>
-
-                            <div class="flex items-center justify-end mt-4">
+                            <div class="form-group">
                                 @if (Route::has('password.request'))
-                                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
-                                        Mot de passe oublié ?
+                                    <a class="text-sm" href="{{ route('password.request') }}" style="color: #3490dc;">
+                                        {{ __('Mot de passe oublié ?') }}
                                     </a>
                                 @endif
-
-                                <x-button class="btn btn-primary ml-3">
-                                    Se connecter
+                            </div>
+                            <div class="form-group">
+                                <x-button class="btn btn-primary btn-block">
+                                    {{ __('Se connecter') }}
                                 </x-button>
                             </div>
                         </form>
@@ -56,3 +49,80 @@
         </div>
     </div>
 </x-guest-layout>
+
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        background-color: #fff;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .container {
+        max-width: 1200px;
+        
+    }
+    .card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        overflow: hidden;
+        transition: all 0.3s ease;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+    .card-header {
+        background: linear-gradient(135deg, #6AC8FF 0%, #3A8DFF 100%);
+        color: #fff;
+        padding: 20px;
+    }
+    .card-body {
+        background-color: #fff;
+        padding: 40px 20px;
+    }
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+    .login-info {
+        color: #333;
+        margin-right: 50px;
+        flex: 1;
+    }
+    .login-info h2 {
+        font-size: 2rem;
+        font-weight: 400;
+        margin-bottom: 20px;
+    }
+    .login-info p {
+        font-size: 1rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+    }
+    .login-form {
+        flex: 1;
+    }
+    .form-control {
+        border-radius: 10px;
+        margin-bottom: 20px;
+        padding: 25px 15px;
+        border: 1px solid #ced4da;
+    }
+    .btn-primary {
+        background-color: #3490dc;
+        border: none;
+        padding: 15px 30px;
+        border-radius: 20px;
+        font-size: 1rem;
+    }
+    .btn-primary:hover {
+        background-color: #2779bd;
+    }
+    .text-sm {
+        font-size: 0.875rem;
+    }
+</style>

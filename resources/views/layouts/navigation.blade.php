@@ -8,14 +8,10 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportContent">
-            <!-- Gauche de la Navbar -->
             <ul class="navbar-nav mr-auto">
-                <!-- Liens ou boutons visibles par tous les utilisateurs -->
             </ul>
 
-            <!-- Droite de la Navbar -->
             <ul class="navbar-nav ml-auto">
-                <!-- Authentication Links -->
                 @guest
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
@@ -26,7 +22,6 @@
                         </li>
                     @endif
                 @else
-                    <!-- Lien pour les utilisateurs authentifiés -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ Auth::user()->isAdmin() ? route('admin.index') : route('dashboard') }}">{{ __('Accueil') }}</a>
                     </li>

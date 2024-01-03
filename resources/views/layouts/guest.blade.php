@@ -13,9 +13,9 @@
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <!-- @vite(['resources/css/app.css', 'resources/js/app.js']) -->
     </head>
-    <body class="bg-light">
+    <body >
         @include('layouts.navigation')
         <div class="font-sans text-gray-900 antialiased">
             {{ $slot }}

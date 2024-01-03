@@ -42,7 +42,7 @@ Assurez-vous d'avoir Docker installé sur votre machine. Suivez ces étapes pour
     Copiez et configurez .env.example en .env, puis ajustez vos paramètres de base de données et autres.
 4. **Démarrez les containers Docker**
     ```bash
-    docker-compose up -d
+    docker-compose up -d --build
 
 5. **Exécution des migrations et des seeders**
     ```bash
