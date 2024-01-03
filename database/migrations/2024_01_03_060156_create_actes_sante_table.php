@@ -17,11 +17,15 @@ class CreateActesSanteTable extends Migration
             $table->id();
             $table->string('nom');
             $table->text('description')->nullable();
-            $table->decimal('cout_moyen', 8, 2);
+            $table->decimal('prix', 8, 2);
+            $table->unsignedBigInteger('pays_id');
             $table->timestamps();
+
+            // Clé étrangère référençant la table 'pays' (si elle existe)
+            $table->foreign('pays_id')->references('id')->on('pays');
         });
-        
     }
+
 
     /**
      * Reverse the migrations.

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -8,30 +9,56 @@ class ActeSante extends Model
 {
     use HasFactory;
 
-    /**
-     * Les attributs qui sont mass assignable.
-     *
-     * @var array
-     */
+    // Nom de la table associée au modèle
+    protected $table = 'actes_sante';
+
+    // Champs de la table que vous pouvez remplir
     protected $fillable = [
         'nom',
         'description',
-        'cout_moyen',
-        // Ajoutez d'autres champs si nécessaire
+        'prix',
+        'pays_id',
+        // autres champs que vous voulez rendre mass assignable
     ];
 
-    // Ajoutez ici les méthodes pour les éventuelles relations
-    // Par exemple, si un acte de santé est lié à un ou plusieurs pays
+    // Champs à cacher lors de la conversion en JSON
+    protected $hidden = [
+        // champs à cacher
+    ];
+
+    // Champs à convertir en types natifs
+    protected $casts = [
+        'created_at' => 'datetime', // exemple
+        // autres conversions de champs si nécessaire
+    ];
 
     /**
-     * Relation avec le modèle Pays (si applicable).
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * Relation avec le modèle Pays (si vous avez une table pays)
      */
     public function pays()
     {
-        return $this->belongsToMany(Pays::class);
+        return $this->belongsTo(Pays::class);
     }
 
-    // Vous pouvez ajouter d'autres méthodes ou relations si nécessaire
+    /**
+     * Un accesseur pour obtenir une valeur formatée (exemple)
+     */
+    public function getPrixFormateAttribute()
+    {
+        return number_format($this->prix, 2) . ' €';
+    }
+
+    /**
+     * Un mutateur pour préparer une donnée avant de la sauvegarder (exemple)
+     */
+    public function setNomAttribute($value)
+    {
+        $this->attributes['nom'] = strtolower($value);
+    }
+
+    // Autres méthodes du modèle
+    // public function uneMethode()
+    // {
+    //     // logique de la méthode
+    // }
 }
