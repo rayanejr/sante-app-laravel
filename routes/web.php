@@ -18,21 +18,28 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Route de déconnexion
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+// Groupes de routes avec vérification de l'email
+Route::middleware(['auth', 'verified'])->group(function () {
+    // Tableau de bord pour les utilisateurs authentifiés
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
 
-Route::group(['middleware' => ['auth', 'admin']], function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
-
-    // Routes CRUD pour les modèles
-    Route::resource('actes_sante', ActeSanteController::class);
-    Route::resource('pays', PaysController::class);
-    Route::resource('recommandations', RecommandationController::class);
-    Route::resource('deplacements', DeplacementController::class);
-    Route::resource('users', UserController::class); // Assurez-vous que cette route est sécurisée et appropriée
+    // Routes réservées aux administrateurs
+    Route::middleware('admin')->group(function () {
+        Route::get('/admin', [AdminController::class, 'index'])->name('admin.index');
+        
+        // Exemple de routes CRUD pour les administrateurs
+        Route::resource('admin/actes_sante', ActeSanteController::class);
+        Route::resource('admin/pays', PaysController::class);
+        Route::resource('admin/recommandations', RecommandationController::class);
+        Route::resource('admin/deplacements', DeplacementController::class);
+        Route::resource('admin/users', UserController::class);
+    });
 });
 
+// Inclusion des routes d'authentification
 require __DIR__.'/auth.php';

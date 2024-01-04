@@ -1,4 +1,4 @@
-<x-guest-layout>
+<<x-guest-layout>
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-6">
@@ -50,4 +50,66 @@
             </div>
         </div>
     </div>
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fff;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+        }
+
+        .card-header {
+            background: #3490dc; /* Couleur primaire pour l'en-tête */
+            color: #fff;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-body {
+            background-color: #f8f9fa; /* Couleur de fond claire */
+            padding: 40px 20px;
+            color: #333; /* Couleur du texte */
+        }
+
+        .form-control {
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 25px 15px;
+            border: 1px solid #ced4da;
+        }
+
+        .btn-primary {
+            background-color: #3490dc;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 20px;
+            font-size: 1rem;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #2779bd;
+        }
+    </style>
+
 </x-guest-layout>
