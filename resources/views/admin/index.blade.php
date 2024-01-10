@@ -3,12 +3,13 @@
 
         <!-- Sidebar -->
         <div id="sidebar-wrapper">
-            <div class="sidebar-heading">Sante-APP</div>
+        <div class="sidebar-heading">Sante-APP</div>
             <div class="list-group list-group-flush">
-                <a href="#" class="list-group-item list-group-item-action active">Dashboard</a>
-                <a href="#" class="list-group-item list-group-item-action">Statistiques</a>
-                <a href="#" class="list-group-item list-group-item-action">Conseils de santé</a>
-                <a href="#" class="list-group-item list-group-item-action">Rendez-vous</a>
+                <a href="{{ route('admin.index') }}" class="list-group-item list-group-item-action">Dashboard</a>
+                <a href="{{ route('actes_sante.index') }}" class="list-group-item list-group-item-action">Actes de Santé</a>
+                <a href="{{ route('deplacements.index') }}" class="list-group-item list-group-item-action">Déplacements</a>
+                <a href="{{ route('pays.index') }}" class="list-group-item list-group-item-action">Pays</a>
+                <a href="{{ route('users.index') }}" class="list-group-item list-group-item-action">Utilisateurs</a>
             </div>
         </div>
 
