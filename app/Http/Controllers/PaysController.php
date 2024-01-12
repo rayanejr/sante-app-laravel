@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pays;
 use Illuminate\Http\Request;
+use App\Models\ActeSante;
 
 class PaysController extends Controller
 {
@@ -32,11 +33,18 @@ class PaysController extends Controller
         return redirect()->route('pays.index')->with('success', 'Pays ajouté avec succès.');
     }
 
-    public function show($id)
-    {
-        $pays = Pays::findOrFail($id);
-        return view('pays.show', compact('pays'));
+    public function showByCountryName($countryName)
+{
+    $pays = Pays::where('nom', $countryName)->first();
+    
+    if ($pays) {
+        $actesSante = ActeSante::where('pays_id', $pays->id)->get();
+    } else {
+        $actesSante = collect(); // Crée une collection vide
     }
+
+    return view('pays.show', compact('pays', 'actesSante', 'countryName'));
+}
 
     public function edit($id)
     {
