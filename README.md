@@ -64,6 +64,7 @@ Assurez-vous d'avoir Docker installé sur votre machine. Suivez ces étapes pour
     ```bash
     docker-compose down
 8. **Lancer le projet React Native**
+   ```bash
    - (Optionnel) Faire npx create-expo-app sante-app-react dans le dossier sante-app pour installer.
    - Lancer npx expo start.
 ## Utilisation
