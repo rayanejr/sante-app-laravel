@@ -63,7 +63,9 @@ Assurez-vous d'avoir Docker installé sur votre machine. Suivez ces étapes pour
 7. **Arrêtez les containers Docker**
     ```bash
     docker-compose down
-
+8. **Lancer le projet React Native**
+   - (Optionnel) Faire npx create-expo-app sante-app-react dans le dossier sante-app pour installer.
+   - Lancer npx expo start.
 ## Utilisation
 
 - Accueil : Accédez à la page d'accueil de l'application.
