@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 class LoginRequest extends FormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Détermine si l'utilisateur est autorisé à faire cette demande.
      *
      * @return bool
      */
@@ -22,7 +22,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Règles de validation applicables à la demande.
      *
      * @return array
      */
@@ -35,7 +35,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Attempt to authenticate the request's credentials.
+     * Tente d'authentifier les informations d'identification de la demande.
      *
      * @return void
      *
@@ -57,7 +57,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Ensure the login request is not rate limited.
+     * Assure que la demande de connexion n'est pas limitée en fréquence.
      *
      * @return void
      *
@@ -82,7 +82,7 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Get the rate limiting throttle key for the request.
+     * Obtient la clé de limitation de la fréquence pour la demande.
      *
      * @return string
      */

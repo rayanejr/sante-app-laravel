@@ -10,12 +10,7 @@ class RecommandationController extends Controller
     public function index()
     {
         $recommandations = Recommandation::all();
-        return view('recommandations.index', compact('recommandations'));
-    }
-
-    public function create()
-    {
-        return view('recommandations.create');
+        return response()->json($recommandations);
     }
 
     public function store(Request $request)
@@ -26,20 +21,14 @@ class RecommandationController extends Controller
             // Autres champs si nécessaire
         ]);
 
-        Recommandation::create($validatedData);
-        return redirect()->route('recommandations.index')->with('success', 'Recommandation créée avec succès.');
+        $recommandation = Recommandation::create($validatedData);
+        return response()->json(['message' => 'Recommandation créée avec succès.', 'recommandation' => $recommandation], 201);
     }
 
     public function show($id)
     {
         $recommandation = Recommandation::findOrFail($id);
-        return view('recommandations.show', compact('recommandation'));
-    }
-
-    public function edit($id)
-    {
-        $recommandation = Recommandation::findOrFail($id);
-        return view('recommandations.edit', compact('recommandation'));
+        return response()->json($recommandation);
     }
 
     public function update(Request $request, $id)
@@ -51,14 +40,13 @@ class RecommandationController extends Controller
         ]);
 
         Recommandation::whereId($id)->update($validatedData);
-        return redirect()->route('recommandations.index')->with('success', 'Recommandation mise à jour avec succès.');
+        return response()->json(['message' => 'Recommandation mise à jour avec succès.']);
     }
 
     public function destroy($id)
     {
         $recommandation = Recommandation::findOrFail($id);
         $recommandation->delete();
-        return redirect()->route('recommandations.index')->with('success', 'Recommandation supprimée avec succès.');
+        return response()->json(['message' => 'Recommandation supprimée avec succès.']);
     }
 }
-

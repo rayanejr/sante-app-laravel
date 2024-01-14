@@ -1,30 +1,18 @@
 <?php
-
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function create()
-    {
-        return view('auth.login');
-    }
-
-    /**
-     * Handle an incoming authentication request.
+     * Handle an incoming authentication request and return JSON response.
      *
      * @param  \App\Http\Requests\Auth\LoginRequest  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(LoginRequest $request)
     {
@@ -32,20 +20,20 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        // Vérifiez si l'utilisateur est un administrateur et redirigez-le vers le tableau de bord admin
+        // Vous pouvez personnaliser la réponse en fonction du rôle de l'utilisateur
+        // Par exemple, retourner des informations supplémentaires pour un administrateur
         if (Auth::user()->isAdmin()) {
-            return redirect()->route('admin.index');
+            return response()->json(['message' => 'Connecté en tant qu\'administrateur', 'user' => Auth::user()]);
         }
 
-        // Pour les autres utilisateurs, redirigez vers la page par défaut
-        return redirect()->intended(RouteServiceProvider::HOME);
+        // Pour les autres utilisateurs, renvoyez une réponse JSON générique
+        return response()->json(['message' => 'Connexion réussie', 'user' => Auth::user()]);
     }
-
     /**
-     * Destroy an authenticated session.
+     * Destroy an authenticated session and return JSON response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\JsonResponse
      */
     public function destroy(Request $request)
     {
@@ -55,6 +43,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return response()->json(['message' => 'Déconnexion réussie']);
     }
 }

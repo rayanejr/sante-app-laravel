@@ -9,20 +9,10 @@ use Illuminate\Support\Facades\Password;
 class PasswordResetLinkController extends Controller
 {
     /**
-     * Display the password reset link request view.
-     *
-     * @return \Illuminate\View\View
-     */
-    public function create()
-    {
-        return view('auth.forgot-password');
-    }
-
-    /**
-     * Handle an incoming password reset link request.
+     * Handle an incoming password reset link request and return JSON response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\JsonResponse
      *
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -32,16 +22,14 @@ class PasswordResetLinkController extends Controller
             'email' => ['required', 'email'],
         ]);
 
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
+        // Tentative d'envoi du lien de réinitialisation du mot de passe
+        $status = Password::sendResetLink($request->only('email'));
 
+        // Renvoie une réponse JSON en fonction du résultat
         return $status == Password::RESET_LINK_SENT
-                    ? back()->with('status', __($status))
-                    : back()->withInput($request->only('email'))
-                            ->withErrors(['email' => __($status)]);
+                    ? response()->json(['status' => 'reset-link-sent'])
+                    : response()->json(['email' => __($status)], 422);
     }
 }
+
+

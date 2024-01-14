@@ -2,7 +2,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-// Incluez les modèles nécessaires pour les statistiques
 use App\Models\User;
 use App\Models\ActeSante;
 use App\Models\Pays;
@@ -12,9 +11,9 @@ use App\Models\Deplacement;
 class AdminController extends Controller
 {
     /**
-     * Affiche la page d'administration.
+     * Renvoie les statistiques pour la page d'administration en format JSON.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index()
     {
@@ -25,9 +24,13 @@ class AdminController extends Controller
         $nombreRecommandations = Recommandation::count();
         $nombreDeplacements = Deplacement::count();
 
-        // Passer ces données à la vue
-        return view('admin.index', compact('nombreUtilisateurs', 'nombreActesSante', 'nombrePays', 'nombreRecommandations', 'nombreDeplacements'));
+        // Renvoyer ces données sous forme de réponse JSON
+        return response()->json([
+            'nombreUtilisateurs' => $nombreUtilisateurs,
+            'nombreActesSante' => $nombreActesSante,
+            'nombrePays' => $nombrePays,
+            'nombreRecommandations' => $nombreRecommandations,
+            'nombreDeplacements' => $nombreDeplacements
+        ]);
     }
-
-    // Autres méthodes si nécessaire
 }

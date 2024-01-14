@@ -13,21 +13,10 @@ use Illuminate\Validation\Rules;
 class NewPasswordController extends Controller
 {
     /**
-     * Display the password reset view.
+     * Handle an incoming new password request and return JSON response.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\View\View
-     */
-    public function create(Request $request)
-    {
-        return view('auth.reset-password', ['request' => $request]);
-    }
-
-    /**
-     * Handle an incoming new password request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * @return \Illuminate\Http\JsonResponse
      *
      * @throws \Illuminate\Validation\ValidationException
      */
@@ -39,9 +28,7 @@ class NewPasswordController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
+        // Tente de réinitialiser le mot de passe de l'utilisateur
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
@@ -54,12 +41,9 @@ class NewPasswordController extends Controller
             }
         );
 
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
+        // Renvoie une réponse JSON en fonction du résultat
         return $status == Password::PASSWORD_RESET
-                    ? redirect()->route('login')->with('status', __($status))
-                    : back()->withInput($request->only('email'))
-                            ->withErrors(['email' => __($status)]);
+                    ? response()->json(['message' => 'Mot de passe réinitialisé avec succès.'])
+                    : response()->json(['message' => 'Erreur de réinitialisation du mot de passe.', 'errors' => ['email' => __($status)]], 422);
     }
 }

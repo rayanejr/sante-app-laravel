@@ -9,19 +9,19 @@ use Illuminate\Support\Facades\Auth;
 class AdminMiddleware
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure  $next
-     * @return mixed
-     */
+    * Handle an incoming request.
+    *
+    * @param \Illuminate\Http\Request $request
+    * @param \Closure $next
+    * @return mixed
+    */
     public function handle(Request $request, Closure $next)
     {
+        // Vérifie si l'utilisateur est connecté et est un administrateur
         if (!Auth::check() || !Auth::user()->isAdmin()) {
-            return redirect('/home');
+        // Pour une API, retournez une réponse JSON avec un code d'état HTTP approprié
+        return response()->json(['message' => 'Accès non autorisé.'], 403);
         }
-
         return $next($request);
     }
-
 }

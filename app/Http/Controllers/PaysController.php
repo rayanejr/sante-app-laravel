@@ -10,12 +10,7 @@ class PaysController extends Controller
     public function index()
     {
         $pays = Pays::all();
-        return view('pays.index', compact('pays'));
-    }
-
-    public function create()
-    {
-        return view('pays.create');
+        return response()->json($pays);
     }
 
     public function store(Request $request)
@@ -25,30 +20,22 @@ class PaysController extends Controller
             'indice_co2' => 'required|numeric',
         ]);
 
-        $pay = new Pays();
-        $pay->nom = $validatedData['nom'];
-        $pay->indice_co2 = $validatedData['indice_co2'];
-        $pay->save();
+        $pay = Pays::create($validatedData);
 
-        return redirect()->route('pays.index')->with('success', 'Pays ajouté avec succès.');
+        return response()->json($pay, 201);
     }
 
     public function showByCountryName($countryName)
     {
         $pays = Pays::where('nom', '=', $countryName)->first();
-        $actesSante = $pays ? ActeSante::where('pays_id', $pays->id)->get() : collect();
-        $tousLesPays = Pays::all();
+        if (!$pays) {
+            return response()->json(['error' => 'Pays non trouvé'], 404);
+        }
 
-        return view('pays.show', compact('pays', 'actesSante', 'countryName', 'tousLesPays'));
+        $actesSante = ActeSante::where('pays_id', $pays->id)->get();
+
+        return response()->json(['pays' => $pays, 'actesSante' => $actesSante]);
     }
-
-
-    public function edit($id)
-    {
-        $pay = Pays::findOrFail($id);
-        return view('pays.edit', compact('pay')); // Assurez-vous que c'est 'pay' et non 'pays'
-    }
-
 
     public function update(Request $request, $id)
     {
@@ -57,59 +44,67 @@ class PaysController extends Controller
             'indice_co2' => 'required|numeric',
         ]);
 
-        $pay = Pays::findOrFail($id);
-        $pay->nom = $validatedData['nom'];
-        $pay->indice_co2 = $validatedData['indice_co2'];
-        $pay->save();
+        $pays = Pays::findOrFail($id);
+        $pays->update($validatedData);
 
-        return redirect()->route('pays.index')->with('success', 'Pays mis à jour avec succès.');
+        return response()->json($pays);
     }
 
     public function destroy($id)
     {
         $pays = Pays::findOrFail($id);
         $pays->delete();
-        return redirect()->route('pays.index')->with('success', 'Pays supprimé avec succès.');
+
+        return response()->json(['message' => 'Pays supprimé avec succès']);
     }
 
     public function estimationEmpreinteCo2(Request $request)
     {
         $paysDepartId = $request->input('pays_depart');
         $paysDestinationId = $request->input('pays_destination');
-    
+
         $paysDepart = Pays::find($paysDepartId);
         $paysDestination = Pays::find($paysDestinationId);
-    
+
         if (!$paysDepart || !$paysDestination) {
-            return back()->with('erreur', 'Informations sur les pays non disponibles.');
+            return response()->json(['error' => 'Informations sur les pays non disponibles'], 404);
         }
-    
+
         $distance = $this->calculerDistanceEntrePays($paysDepart, $paysDestination);
         $empreinteCo2 = $this->calculerEmpreinteCarbone($distance);
-    
-        return back()->with('empreinteCo2', $empreinteCo2);
+
+        return response()->json(['empreinteCo2' => $empreinteCo2]);
     }
-    
+
     private function calculerDistanceEntrePays($pays1, $pays2)
     {
-        // Utilisez ici les coordonnées géographiques (latitude et longitude) des capitales des pays par exemple
-        $lat1 = $pays1->latitude;
-        $lon1 = $pays1->longitude;
-        $lat2 = $pays2->latitude;
-        $lon2 = $pays2->longitude;
+        $rayonTerre = 6371; // Rayon de la Terre en kilomètres
 
-        $theta = $lon1 - $lon2;
-        $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
-        $dist = acos($dist);
-        $dist = rad2deg($dist);
-        $miles = $dist * 60 * 1.1515;
+        // Convertir les latitudes et longitudes de degrés en radians
+        $lat1 = deg2rad($pays1->latitude);
+        $lon1 = deg2rad($pays1->longitude);
+        $lat2 = deg2rad($pays2->latitude);
+        $lon2 = deg2rad($pays2->longitude);
 
-        return ($miles * 1.609344); // Convertissez en kilomètres
+        // Calculer les différences de latitude et longitude
+        $deltaLat = $lat2 - $lat1;
+        $deltaLon = $lon2 - $lon1;
+
+        // Appliquer la formule de Haversine
+        $a = sin($deltaLat / 2) * sin($deltaLat / 2) +
+            cos($lat1) * cos($lat2) *
+            sin($deltaLon / 2) * sin($deltaLon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+
+        // Calculer la distance
+        $distance = $rayonTerre * $c;
+
+        return $distance;
     }
 
     private function calculerEmpreinteCarbone($distance)
     {
-        $tauxEmission = 0.2; // Par exemple, 0.2 kg CO2 par kilomètre
+        $tauxEmission = 0.2; // Par exemple
         return $distance * $tauxEmission;
     }
 }
