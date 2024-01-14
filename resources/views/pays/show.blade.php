@@ -24,6 +24,29 @@
             @else
                 <div class="alert alert-info">Aucune donnée existante pour le pays "{{ $countryName }}".</div>
             @endif
+            <hr>
+            <h3>Estimation de l'Empreinte Carbone pour le Voyage</h3>
+            <form action="{{ route('estimation_co2') }}" method="POST">
+                @csrf
+                <input type="hidden" name="pays_destination" value="{{ $pays->id ?? '' }}">
+                <div class="form-group">
+                    <label for="pays_depart">Sélectionnez votre pays de départ :</label>
+                    <select class="form-control" id="pays_depart" name="pays_depart">
+                        @foreach($tousLesPays as $paysDepart)
+                            <option value="{{ $paysDepart->id }}">{{ $paysDepart->nom }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Estimer l'Empreinte Carbone</button>
+            </form>
+
+
+            @if (session('empreinteCo2'))
+                <div class="alert alert-success">
+                    Empreinte carbone estimée pour le voyage : {{ session('empreinteCo2') }} kg CO2
+                </div>
+            @endif
+
         </div>
     </div>
 </div>

@@ -28,6 +28,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return view('dashboard');
     })->name('dashboard');
     Route::get('/dashboard/{countryName}', [PaysController::class, 'showByCountryName']);
+    Route::post('/estimation-co2', [PaysController::class, 'estimationEmpreinteCo2'])->name('estimation_co2');
+
+
 
     
     // Routes réservées aux administrateurs

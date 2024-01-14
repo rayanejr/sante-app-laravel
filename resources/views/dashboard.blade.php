@@ -98,10 +98,8 @@
                 L.geoJSON(data, {
                     onEachFeature: function (feature, layer) {
                         layer.on('click', function () {
-                            console.log('Pays cliqué:', feature);
-                            var countryName = feature.properties.name; // Assurez-vous que cette propriété correspond à celle dans votre GeoJSON
+                            var countryName = feature.properties.name; // Assurez-vous que cette propriété existe dans votre GeoJSON
                             if (countryName) {
-                                console.log('Redirection vers:', '/dashboard/' + countryName);
                                 window.location.href = '/dashboard/' + encodeURIComponent(countryName);
                             } else {
                                 console.error('Nom du pays non trouvé');
