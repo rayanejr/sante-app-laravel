@@ -4,53 +4,55 @@ namespace App\Http\Controllers;
 use App\Models\Pays;
 use Illuminate\Http\Request;
 use App\Models\ActeSante;
+use Illuminate\Http\JsonResponse;
 
 class PaysController extends Controller
 {
-    public function index()
+    public function index(): JsonResponse
     {
         $pays = Pays::all();
-        return view('pays.index', compact('pays'));
+        return response()->json($pays);
     }
 
-    public function create()
-    {
-        return view('pays.create');
-    }
-
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
         $validatedData = $request->validate([
             'nom' => 'required|unique:pays|max:255',
             'indice_co2' => 'required|numeric',
         ]);
 
-        $pay = new Pays();
-        $pay->nom = $validatedData['nom'];
-        $pay->indice_co2 = $validatedData['indice_co2'];
-        $pay->save();
+        $pays = Pays::create($validatedData);
 
-        return redirect()->route('pays.index')->with('success', 'Pays ajouté avec succès.');
+        return response()->json(['message' => 'Pays ajouté avec succès.', 'pays' => $pays], 201);
     }
 
-    public function showByCountryName($countryName)
+    public function show():JsonResponse
     {
-        $pays = Pays::where('nom', '=', $countryName)->first();
-        $actesSante = $pays ? ActeSante::where('pays_id', $pays->id)->get() : collect();
-        $tousLesPays = Pays::all();
-
-        return view('pays.show', compact('pays', 'actesSante', 'countryName', 'tousLesPays'));
+        $pays = Pays::all();
+        return response()->json($pays);
     }
 
-
-    public function edit($id)
+    public function showAllCountriesByName(): JsonResponse
     {
-        $pay = Pays::findOrFail($id);
-        return view('pays.edit', compact('pay')); // Assurez-vous que c'est 'pay' et non 'pays'
+        $pays = Pays::all();
+        $countryNames = $pays->pluck('nom');
+        
+        return response()->json($countryNames);
     }
 
+    public function showCountryByEnglishName($name): JsonResponse
+    {
+        $pays = Pays::where('nom', $name)->first(); 
 
-    public function update(Request $request, $id)
+        if (!$pays) {
+
+            return response()->json(['error' => 'Pays non trouvé'], 404);
+        }
+
+        return response()->json(['nom_anglais' => $pays->nom_anglais,'id' => $pays->id]);
+    }
+
+    public function update(Request $request, $id): JsonResponse
     {
         $validatedData = $request->validate([
             'nom' => 'required|unique:pays,nom,' . $id . '|max:255',
@@ -58,58 +60,16 @@ class PaysController extends Controller
         ]);
 
         $pay = Pays::findOrFail($id);
-        $pay->nom = $validatedData['nom'];
-        $pay->indice_co2 = $validatedData['indice_co2'];
-        $pay->save();
+        $pay->update($validatedData);
 
-        return redirect()->route('pays.index')->with('success', 'Pays mis à jour avec succès.');
+        return response()->json(['message' => 'Pays mis à jour avec succès.', 'pays' => $pay]);
     }
 
-    public function destroy($id)
+    public function destroy($id): JsonResponse
     {
         $pays = Pays::findOrFail($id);
         $pays->delete();
-        return redirect()->route('pays.index')->with('success', 'Pays supprimé avec succès.');
-    }
 
-    public function estimationEmpreinteCo2(Request $request)
-    {
-        $paysDepartId = $request->input('pays_depart');
-        $paysDestinationId = $request->input('pays_destination');
-    
-        $paysDepart = Pays::find($paysDepartId);
-        $paysDestination = Pays::find($paysDestinationId);
-    
-        if (!$paysDepart || !$paysDestination) {
-            return back()->with('erreur', 'Informations sur les pays non disponibles.');
-        }
-    
-        $distance = $this->calculerDistanceEntrePays($paysDepart, $paysDestination);
-        $empreinteCo2 = $this->calculerEmpreinteCarbone($distance);
-    
-        return back()->with('empreinteCo2', $empreinteCo2);
-    }
-    
-    private function calculerDistanceEntrePays($pays1, $pays2)
-    {
-        // Utilisez ici les coordonnées géographiques (latitude et longitude) des capitales des pays par exemple
-        $lat1 = $pays1->latitude;
-        $lon1 = $pays1->longitude;
-        $lat2 = $pays2->latitude;
-        $lon2 = $pays2->longitude;
-
-        $theta = $lon1 - $lon2;
-        $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
-        $dist = acos($dist);
-        $dist = rad2deg($dist);
-        $miles = $dist * 60 * 1.1515;
-
-        return ($miles * 1.609344); // Convertissez en kilomètres
-    }
-
-    private function calculerEmpreinteCarbone($distance)
-    {
-        $tauxEmission = 0.2; // Par exemple, 0.2 kg CO2 par kilomètre
-        return $distance * $tauxEmission;
+        return response()->json(['message' => 'Pays supprimé avec succès.']);
     }
 }
