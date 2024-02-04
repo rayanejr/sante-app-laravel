@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Sante-APP') }} - Acceuil</title>
+    <title>{{ config('app.name', 'Sante-APP') }} - Accueil</title>
 
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
@@ -82,6 +82,26 @@
 
     <!-- Custom GeoJSON data and Leaflet script to handle map and redirection -->
     <script>
+        function translateCountryName(countryName) {
+            const url = 'https://libretranslate.de/translate';
+            const params = {
+                q: countryName,
+                source: "en",
+                target: "fr",
+                format: "text"
+            };
+
+            return fetch(url, {
+                method: 'POST',
+                body: JSON.stringify(params),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => data.translatedText)
+            .catch(error => console.error('Erreur de traduction:', error));
+        }
         var map = L.map('map').setView([20, 0], 2);
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             maxZoom: 19,
@@ -98,13 +118,17 @@
                 L.geoJSON(data, {
                     onEachFeature: function (feature, layer) {
                         layer.on('click', function () {
-                            var countryName = feature.properties.name; // Assurez-vous que cette propriété existe dans votre GeoJSON
-                            if (countryName) {
-                                window.location.href = '/dashboard/' + encodeURIComponent(countryName);
+                            console.log('Pays cliqué:', feature);
+                            var countryName = feature.properties.name;
+                            translateCountryName(countryName).then(countryNameFR => {
+                            if (countryNameFR) {
+                                console.log('Redirection vers:', '/dashboard/' + countryNameFR);
+                                window.location.href = '/dashboard/' + encodeURIComponent(countryNameFR);
                             } else {
                                 console.error('Nom du pays non trouvé');
                             }
                         });
+                    });
                     }
                 }).addTo(map);
             })
